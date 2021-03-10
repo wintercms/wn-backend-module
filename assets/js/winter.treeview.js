@@ -9,11 +9,11 @@
  * - open.oc.treeview - this event is triggered on the list element when an item is clicked.
  *
  * Dependences:
- * - Tree list (october.treelist.js)
+ * - Tree list (winter.treelist.js)
  *
  */
 +function ($) { "use strict";
-    var Base = $.oc.foundation.base,
+    var Base = $.wn.foundation.base,
         BaseProto = Base.prototype
 
     var TreeView = function (element, options) {
@@ -24,7 +24,7 @@
 
         Base.call(this)
 
-        $.oc.foundation.controlUtils.markDisposable(element)
+        $.wn.foundation.controlUtils.markDisposable(element)
         this.init()
     }
 
