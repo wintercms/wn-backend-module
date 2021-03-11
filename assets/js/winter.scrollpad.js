@@ -1,13 +1,13 @@
 /*
  * ScrollPad plugin.
  *
- * This plugin creates a scrollable area with features similar (but more limited) 
- * to october.scrollbar.js, with virtual scroll bars. This plugin is more lightweight 
+ * This plugin creates a scrollable area with features similar (but more limited)
+ * to winter.scrollbar.js, with virtual scroll bars. This plugin is more lightweight
  * in terms of calculations and more responsive. It doesn't use scripting for scrolling,
- * instead it uses the native scrolling and listens for the onscroll event to update 
+ * instead it uses the native scrolling and listens for the onscroll event to update
  * the virtual scroll bars.
  *
- * The plugin is partially based on Trackpad Scroll Emulator 
+ * The plugin is partially based on Trackpad Scroll Emulator
  * https://github.com/jnicol/trackpad-scroll-emulator, cleaned up for the better CPU and
  * memory (DOM references) management.
  *
@@ -15,12 +15,12 @@
  * <div class="control-scrollpad" data-control="scrollpad" data-direction="vertical">
  *     <div>
  *         <div>
- *             The content goes here. The two wrapping 
+ *             The content goes here. The two wrapping
  *             DIV elements are required.
  *         </div>
  *     </div>
  * </div>
- * 
+ *
  * Data attributes:
  * - data-control="scrollpad" - enables the plugin.
  * - data-direction="vertical|horizontal" - sets the scrolling direction.
@@ -38,7 +38,7 @@
  */
 +function ($) { "use strict";
 
-    var Base = $.oc.foundation.base,
+    var Base = $.wn.foundation.base,
         BaseProto = Base.prototype
 
     // SCROLLPAD CLASS DEFINITION
@@ -63,7 +63,7 @@
 
         this.init()
 
-        $.oc.foundation.controlUtils.markDisposable(element)
+        $.wn.foundation.controlUtils.markDisposable(element)
     }
 
     Scrollpad.prototype = Object.create(BaseProto)
@@ -157,7 +157,7 @@
 
         document.body.removeChild(testerElement)
 
-        // Some magic for FireFox, see 
+        // Some magic for FireFox, see
         // https://github.com/jnicol/trackpad-scroll-emulator/blob/master/jquery.trackpad-scroll-emulator.js
         if (width === innerWidth && navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
             return this.scrollbarSize = 17
@@ -221,15 +221,15 @@
         if (this.updateScrollbarTimer !== null)
             return
 
-        this.updateScrollbarTimer = setTimeout(this.proxy(this.displayScrollbar), 10) 
+        this.updateScrollbarTimer = setTimeout(this.proxy(this.displayScrollbar), 10)
     }
 
     Scrollpad.prototype.onStartDrag = function(ev) {
-        $.oc.foundation.event.stop(ev)
-        
-        var pageCoords = $.oc.foundation.event.pageCoordinates(ev),
+        $.wn.foundation.event.stop(ev)
+
+        var pageCoords = $.wn.foundation.event.pageCoordinates(ev),
             eventOffset = this.options.direction == 'vertical' ? pageCoords.y : pageCoords.x,
-            handleCoords = $.oc.foundation.element.absolutePosition(this.dragHandleElement),
+            handleCoords = $.wn.foundation.element.absolutePosition(this.dragHandleElement),
             handleOffset = this.options.direction == 'vertical' ? handleCoords.top : handleCoords.left
 
         this.dragOffset = eventOffset - handleOffset
@@ -239,15 +239,15 @@
     }
 
     Scrollpad.prototype.onMouseMove = function(ev) {
-        $.oc.foundation.event.stop(ev)
+        $.wn.foundation.event.stop(ev)
 
         var eventCoordsAttr = this.options.direction == 'vertical' ? 'y' : 'x',
             elementCoordsAttr = this.options.direction == 'vertical' ? 'top' : 'left',
             offsetAttr = this.options.direction == 'vertical' ? 'offsetHeight' : 'offsetWidth',
             scrollAttr = this.options.direction == 'vertical' ? 'scrollTop' : 'scrollLeft'
 
-        var eventOffset = $.oc.foundation.event.pageCoordinates(ev)[eventCoordsAttr],
-            scrollbarOffset = $.oc.foundation.element.absolutePosition(this.scrollbarElement)[elementCoordsAttr],
+        var eventOffset = $.wn.foundation.event.pageCoordinates(ev)[eventCoordsAttr],
+            scrollbarOffset = $.wn.foundation.element.absolutePosition(this.scrollbarElement)[elementCoordsAttr],
             dragPos = eventOffset - scrollbarOffset - this.dragOffset,
             scrollbarSize = this.scrollbarElement[offsetAttr],
             contentSize = this.contentElement[offsetAttr],
@@ -260,7 +260,7 @@
 
         this.scrollContentElement[scrollAttr] = scrollPos
     }
-    
+
     Scrollpad.prototype.onEndDrag = function(ev) {
         document.removeEventListener('mousemove', this.proxy(this.onMouseMove))
         document.removeEventListener('mouseup', this.proxy(this.onEndDrag))
@@ -276,7 +276,7 @@
     var old = $.fn.scrollpad
 
     $.fn.scrollpad = function (option) {
-        var args = Array.prototype.slice.call(arguments, 1), 
+        var args = Array.prototype.slice.call(arguments, 1),
             result = undefined
 
         this.each(function () {
@@ -287,7 +287,7 @@
             if (typeof option == 'string') result = data[option].apply(data, args)
             if (typeof result != 'undefined') return false
         })
-        
+
         return result ? result : this
     }
 
