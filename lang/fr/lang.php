@@ -78,7 +78,7 @@ return [
         'sending' => 'Transmission ...',
         'password_reset_email' => 'Envoyer un e-mail de réinitialisation du mot de passe',
         'manual_password_reset_confirm' => 'Êtes-vous sûr de vouloir envoyer un e-mail de réinitialisation du mot de passe à cet utilisateur ?',
-        'manual_password_reset_success' => 'Un courriel a été envoyé à l\'utilisateur avec des instructions pour réinitialiser son mot de passe.',
+        'manual_password_reset_success' => "Un courriel a été envoyé à l'utilisateur avec des instructions pour réinitialiser son mot de passe.",
     ],
     'dashboard' => [
         'menu_label' => 'Tableau de bord',
@@ -311,7 +311,7 @@ return [
     ],
     'recordfinder' => [
         'find_record' => 'Trouver un enregistrement',
-        'invalid_model_class' => 'La classe du modèle ":modelClass" fournie pour le recordfinder n\'est pas valide.',
+        'invalid_model_class' => "La classe du modèle \":modelClass\" fournie pour le recordfinder n'est pas valide.",
         'cancel' => 'Annuler',
     ],
     'pagelist' => [
@@ -371,9 +371,9 @@ return [
         'permissions'  => 'PHP ne peut pas écrire dans le répertoire :name et ses sous-dossiers. Veuillez modifier les permissions en écriture du serveur web pour ce répertoire.',
         'extension' => 'L\'extension PHP :name n\'est pas installée. Veuillez installer la librairie et activer l\'extension.',
         'plugin_missing' => 'Le plugin :name est une dépendance mais n\'est pas installé. Veuillez installer le plugin.',
-        'debug' => 'Le mode debug est activé. Cela n\'est pas recommandé pour les installations en production.',
-        'decompileBackendAssets' => 'Les assets dans le Backend sont actuellement décompilés. Cela n\'est pas recommandé pour les installations en production.',
-        'default_backend_user' => 'Un utilisateur avec les détails de connexion par défaut (admin / admin@domain.tld) a été trouvé. Changez son nom d\'utilisateur et / ou son adresse e-mail pour aider à protéger le système.',
+        'debug' => "Le mode debug est activé. Cela n'est pas recommandé pour les installations en production.",
+        'decompileBackendAssets' => "Les assets dans le Backend sont actuellement décompilés. Cela n'est pas recommandé pour les installations en production.",
+        'default_backend_user' => "Un utilisateur avec les détails de connexion par défaut (admin / admin@domain.tld) a été trouvé. Changez son nom d'utilisateur et / ou son adresse e-mail pour aider à protéger le système.",
     ],
     'editor' => [
         'menu_label' => 'Préférences de l\'éditeur de code',
@@ -464,7 +464,7 @@ return [
         'app_tagline_description' => 'Ce slogan est affiché sur la page d\'inscription à l\'interface d\'administration.',
         'colors' => 'Couleurs',
         'branding_colors' => 'Couleurs de la marque',
-        'branding_colors_comment' => 'Ces couleurs seront utilisées dans l\'interface utilisateur du backend pour correspondre à votre image de marque.',
+        'branding_colors_comment' => "Ces couleurs seront utilisées dans l'interface utilisateur du backend pour correspondre à votre image de marque.",
         'default_colors' => 'Couleurs par défaut',
         'default_colors_comment' => 'Ces couleurs seront disponibles comme échantillons dans tous les sélecteurs de couleurs, sauf si elles sont remplacées.',
         'add_default_color' => 'Ajouter une couleur par défaut',
@@ -590,7 +590,7 @@ return [
     'mediafinder' => [
         'label' => 'Galerie média',
         'default_prompt' => 'Cliquez sur le bouton %s pour trouver un élément média',
-        'no_image' => 'L\'image n\'a pas été trouvée',
+        'no_image' => "L'image n'a pas été trouvée",
     ],
     'media' => [
         'menu_label' => 'Média',
