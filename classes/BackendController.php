@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller as ControllerBase;
 use Request;
 use Response;
 use Str;
-use System\Classes\PluginManager;
+use System\Classes\Extensions\PluginManager;
 use View;
 use Winter\Storm\Router\Helper as RouterHelper;
 
