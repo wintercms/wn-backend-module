@@ -45,7 +45,7 @@ class ListColumn
     /**
      * @var bool Specifies if this column can be summed.
      */
-    public $summable = true;
+    public $summable = false;
 
     /**
      * @var bool If set to false, disables the default click behavior when the column is clicked.

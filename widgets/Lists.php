@@ -8,6 +8,7 @@ use Backend\Facades\Backend;
 use Backend\Facades\BackendAuth;
 use Backend\Traits\PreferenceMaker;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Lang;
 use System\Classes\ImageResizer;
 use System\Classes\MediaLibrary;
@@ -299,13 +300,21 @@ class Lists extends WidgetBase
             $this->vars['pageCurrent'] = 1;
         }
 
+        // Disable showTotals if there are no records to display
+        if (!$records->count()) {
+            $this->showTotals = false;
+        }
+
         // Initialize sums arrays
         if ($this->showTotals) {
             $sums = [];
+            $formats = [];
+            $queryTotals = $this->calculateTotalSums($columns);
             // Initialize sums to zero for numeric columns
             foreach ($columns as $column) {
                 if ($column->type === 'number' && $column->summable) {
                     $sums[$column->columnName] = 0;
+                    $formats[$column->columnName] = $column->format ?? null;
                 }
             }
 
@@ -313,7 +322,7 @@ class Lists extends WidgetBase
                 $this->showTotals = false;
             } else {
                 // Calculate sums for the current page
-                foreach ($this->vars['records'] as $record) {
+                foreach ($records as $record) {
                     foreach ($columns as $column) {
                         if ($column->type === 'number' && $column->summable) {
                             $value = $this->getColumnValueRaw($record, $column);
@@ -324,9 +333,16 @@ class Lists extends WidgetBase
                     }
                 }
 
-                // Pass sums to view variables
-                $this->vars['sums'] = $sums;
-                $this->vars['totalSums'] = $this->calculateTotalSums($columns);
+                // Process the column values
+                $this->vars['sums'] = collect($sums)->mapWithKeys(function ($sum, $columnName) use ($queryTotals, $formats) {
+                    return [
+                        $columnName => [
+                            'sum' => $sum,
+                            'total' => $queryTotals[$columnName] ?? null,
+                            'format' => $formats[$columnName] ?? null,
+                        ],
+                    ];
+                })->toArray();
             }
         }
         $this->vars['showTotals'] = $this->showTotals;
@@ -687,8 +703,7 @@ class Lists extends WidgetBase
         try {
             $result = $query->first();
         } catch (QueryException $ex) {
-            traceLog("Lists widget: showSums disabled due to SQL error", $ex);
-            $this->showTotals = false;
+            traceLog("Lists widget: showTotals query totals disabled due to SQL error", $ex);
             return [];
         }
 

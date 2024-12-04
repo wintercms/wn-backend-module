@@ -10,9 +10,12 @@
     <?php foreach ($columns as $column): ?>
         <td>
             <?php if ($column->type == 'number' && $column->summable): ?>
+                <?php $item = $sums[$column->columnName]; ?>
                 <span>
-                    <?= number_format($sums[$column->columnName], 0, '.', ',') ?>
-                    (<?= number_format($totalSums[$column->columnName], 0, '.', ',') ?>)
+                    <?= $item['format'] ? sprintf($item['format'], $item['sum']) : number_format($item['sum'], 0, '.', ',') ?>
+                    <?php if (!is_null($item['total'])): ?>
+                        (<?= $item['format'] ? sprintf($item['format'], $item['total']) : number_format($item['total'], 0, '.', ',') ?>)
+                    <?php endif; ?>
                 </span>
             <?php endif ?>
         </td>
