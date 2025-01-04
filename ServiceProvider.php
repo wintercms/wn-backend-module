@@ -12,11 +12,12 @@ use System\Classes\CombineAssets;
 use System\Classes\MailManager;
 use System\Classes\SettingsManager;
 use System\Classes\UpdateManager;
+use Winter\Storm\Foundation\Extension\WinterExtension;
 use Winter\Storm\Support\Facades\Config;
 use Winter\Storm\Support\Facades\Flash;
 use Winter\Storm\Support\ModuleServiceProvider;
 
-class ServiceProvider extends ModuleServiceProvider
+class ServiceProvider extends ModuleServiceProvider implements WinterExtension
 {
     /**
      * Register the service provider.
@@ -326,11 +327,6 @@ class ServiceProvider extends ModuleServiceProvider
     public function getPath(): string
     {
         return __DIR__;
-    }
-
-    public function getVersion(): string
-    {
-        // TODO: Implement getVersion() method.
     }
 
     public function getIdentifier(): string
