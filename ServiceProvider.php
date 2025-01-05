@@ -323,14 +323,4 @@ class ServiceProvider extends ModuleServiceProvider implements WinterExtension
             $manager->registerOwnerAlias('Winter.Backend', 'October.Backend');
         });
     }
-
-    public function getPath(): string
-    {
-        return __DIR__;
-    }
-
-    public function getIdentifier(): string
-    {
-        return 'Backend';
-    }
 }
