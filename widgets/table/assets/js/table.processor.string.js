@@ -46,7 +46,12 @@
      * Renders the cell in the normal (no edit) mode
      */
     StringProcessor.prototype.renderCell = function(value, cellContentContainer) {
-        this.createViewContainer(cellContentContainer, value)
+        this.createViewContainer(cellContentContainer, value);
+
+        if (this.columnConfiguration.readonly || this.columnConfiguration.readOnly) {
+            cellContentContainer.classList.add('readonly');
+            cellContentContainer.setAttribute('tabindex', 0);
+        }
     }
 
     /*
@@ -58,7 +63,11 @@
             return
 
         this.activeCell = cellElement
-        this.buildEditor(cellElement, this.getCellContentContainer(cellElement))
+        if (!this.columnConfiguration.readonly && !this.columnConfiguration.readOnly) {
+            this.buildEditor(cellElement, this.getCellContentContainer(cellElement))
+        } else {
+            this.getCellContentContainer(cellElement).focus()
+        }
     }
 
     /*
@@ -91,10 +100,6 @@
         input.setAttribute('type', 'text')
         input.setAttribute('class', 'string-input')
         input.value = this.tableObj.getCellValue(cellElement)
-
-        if (this.columnConfiguration.readOnly) {
-            input.setAttribute('readonly', true)
-        }
 
         cellContentContainer.appendChild(input)
 

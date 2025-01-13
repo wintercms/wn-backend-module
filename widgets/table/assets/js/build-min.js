@@ -207,8 +207,7 @@ return}for(var i=0,len=this.options.columns.length;i<len;i++){var column=this.op
 if(this.cellProcessors[column].onKeyDown(ev)===false){return}}if(this.navigation.onKeydown(ev)===false){return}if(this.search.onKeydown(ev)===false){return}}
 Table.prototype.onFormSubmit=function(ev,data){if(data.handler==this.options.postbackHandlerName){this.unfocusTable()
 if(!this.validate()){ev.preventDefault()
-return}
-data.options.data[this.options.fieldName]=this.dataSource.getAllData()}}
+return}data.options.data[this.options.fieldName]=this.dataSource.getAllData()}}
 Table.prototype.onToolbarClick=function(ev){var target=this.getEventTarget(ev),cmd=target.getAttribute('data-cmd')
 if(!cmd){return}switch(cmd){case'record-add':case'record-add-below':this.addRecord('below')
 break
@@ -513,10 +512,10 @@ StringProcessor.prototype=Object.create(BaseProto)
 StringProcessor.prototype.constructor=StringProcessor
 StringProcessor.prototype.dispose=function(){BaseProto.dispose.call(this)
 this.focusTimeoutHandler=null}
-StringProcessor.prototype.renderCell=function(value,cellContentContainer){this.createViewContainer(cellContentContainer,value)}
+StringProcessor.prototype.renderCell=function(value,cellContentContainer){this.createViewContainer(cellContentContainer,value);if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){cellContentContainer.classList.add('readonly');cellContentContainer.setAttribute('tabindex',0);}}
 StringProcessor.prototype.onFocus=function(cellElement,isClick){if(this.activeCell===cellElement)return
 this.activeCell=cellElement
-this.buildEditor(cellElement,this.getCellContentContainer(cellElement))}
+if(!this.columnConfiguration.readonly&&!this.columnConfiguration.readOnly){this.buildEditor(cellElement,this.getCellContentContainer(cellElement))}else{this.getCellContentContainer(cellElement).focus()}}
 StringProcessor.prototype.onUnfocus=function(){if(!this.activeCell)return
 var editor=this.activeCell.querySelector('.string-input')
 if(editor){this.tableObj.setCellValue(this.activeCell,editor.value)
@@ -528,7 +527,7 @@ var input=document.createElement('input')
 input.setAttribute('type','text')
 input.setAttribute('class','string-input')
 input.value=this.tableObj.getCellValue(cellElement)
-if(this.columnConfiguration.readOnly){input.setAttribute('readonly',true)}cellContentContainer.appendChild(input)
+cellContentContainer.appendChild(input)
 this.setCaretPosition(input,0)
 window.setTimeout(this.focusTimeoutHandler,0)}
 StringProcessor.prototype.keyNavigationAllowed=function(ev,direction){if(direction!='left'&&direction!='right')return true
@@ -565,10 +564,11 @@ CheckboxProcessor.prototype.isCellFocusable=function(){return false}
 CheckboxProcessor.prototype.renderCell=function(value,cellContentContainer){var checkbox=document.createElement('div')
 checkbox.setAttribute('data-checkbox-element','true')
 checkbox.setAttribute('tabindex','0')
-if(value&&value!=0&&value!="false"){checkbox.setAttribute('class','checked')}cellContentContainer.appendChild(checkbox)}
+if(value&&value!=0&&value!="false"){checkbox.setAttribute('class','checked')}cellContentContainer.appendChild(checkbox)
+if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){cellContentContainer.classList.add('readonly');}}
 CheckboxProcessor.prototype.onFocus=function(cellElement,isClick){cellElement.querySelector('div[data-checkbox-element]').focus()}
 CheckboxProcessor.prototype.onKeyDown=function(ev){if(ev.key==='(Space character)'||ev.key==='Spacebar'||ev.key===' ')this.onClick(ev)}
-CheckboxProcessor.prototype.onClick=function(ev){var target=this.tableObj.getEventTarget(ev,'DIV')
+CheckboxProcessor.prototype.onClick=function(ev){if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){return}var target=this.tableObj.getEventTarget(ev,'DIV')
 if(target.getAttribute('data-checkbox-element')){var container=this.getCheckboxContainerNode(target)
 if(container.getAttribute('data-column')!==this.columnName){return}this.changeState(target)
 $(ev.target).trigger('change')}}
@@ -601,14 +601,15 @@ BaseProto.dispose.call(this)}
 DropdownProcessor.prototype.unregisterListHandlers=function(){if(this.itemListElement){this.itemListElement.removeEventListener('click',this.itemClickHandler)
 this.itemListElement.removeEventListener('keydown',this.itemKeyDownHandler)
 this.itemListElement.removeEventListener('mousemove',this.itemMouseMoveHandler)}}
-DropdownProcessor.prototype.renderCell=function(value,cellContentContainer){var viewContainer=this.createViewContainer(cellContentContainer,'...')
+DropdownProcessor.prototype.renderCell=function(value,cellContentContainer){let viewContainer;if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){viewContainer=this.createViewContainer(cellContentContainer,value)
+cellContentContainer.classList.add('readonly');cellContentContainer.setAttribute('tabindex',0);return;}viewContainer=this.createViewContainer(cellContentContainer,'...')
 this.fetchOptions(cellContentContainer.parentNode,function renderCellFetchOptions(options){if(options[value]!==undefined)viewContainer.textContent=options[value]
 cellContentContainer.setAttribute('tabindex',0)})}
 DropdownProcessor.prototype.onFocus=function(cellElement,isClick){if(this.activeCell===cellElement){this.showDropdown()
 return}this.activeCell=cellElement
-var cellContentContainer=this.getCellContentContainer(cellElement)
+if(!this.columnConfiguration.readonly&&!this.columnConfiguration.readOnly){var cellContentContainer=this.getCellContentContainer(cellElement)
 this.buildEditor(cellElement,cellContentContainer,isClick)
-if(!isClick)cellContentContainer.focus()}
+if(!isClick){cellContentContainer.focus()}}else{this.getCellContentContainer(cellElement).focus()}}
 DropdownProcessor.prototype.onUnfocus=function(){if(!this.activeCell)return
 this.unregisterListHandlers()
 this.hideDropdown()
@@ -699,7 +700,7 @@ AutocompleteProcessor.prototype.onUnfocus=function(){if(!this.activeCell)return
 this.removeAutocomplete()
 BaseProto.onUnfocus.call(this)}
 AutocompleteProcessor.prototype.renderCell=function(value,cellContentContainer){BaseProto.renderCell.call(this,value,cellContentContainer)}
-AutocompleteProcessor.prototype.buildEditor=function(cellElement,cellContentContainer,isClick){BaseProto.buildEditor.call(this,cellElement,cellContentContainer,isClick)
+AutocompleteProcessor.prototype.buildEditor=function(cellElement,cellContentContainer,isClick){if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){return}BaseProto.buildEditor.call(this,cellElement,cellContentContainer,isClick)
 var self=this
 this.fetchOptions(cellElement,function autocompleteFetchOptions(options){self.buildAutoComplete(options)
 self=null})}
