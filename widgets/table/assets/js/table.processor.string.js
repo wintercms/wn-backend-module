@@ -22,12 +22,6 @@
 
     var StringProcessor = function(tableObj, columnName, columnConfiguration) {
         //
-        // State properties
-        //
-
-        this.focusTimeoutHandler = this.onFocusTimeout.bind(this)
-
-        //
         // Parent constructor
         //
 
@@ -39,7 +33,6 @@
 
     StringProcessor.prototype.dispose = function() {
         BaseProto.dispose.call(this)
-        this.focusTimeoutHandler = null
     }
 
     /*
@@ -103,11 +96,8 @@
 
         cellContentContainer.appendChild(input)
 
-        this.setCaretPosition(input, 0)
-
-        // Focus the element in the next frame.
-        // http://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful
-        window.setTimeout(this.focusTimeoutHandler, 0)
+        input.focus();
+        this.setCaretPosition(input, 0);
     }
 
     /*
@@ -149,18 +139,6 @@
         var value = this.tableObj.getCellValue(cellElement)
 
         this.setViewContainerValue(cellElement, value)
-    }
-
-    StringProcessor.prototype.onFocusTimeout = function() {
-        if (!this.activeCell)
-            return
-
-        var editor = this.activeCell.querySelector('.string-input')
-        if (!editor)
-            return
-
-        editor.focus()
-        this.setCaretPosition(editor, 0)
     }
 
     StringProcessor.prototype.getCaretPosition = function(input) {

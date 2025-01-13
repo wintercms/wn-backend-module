@@ -506,12 +506,10 @@ this.validators.push(validator)}}
 Base.prototype.validate=function(value,rowData){for(var i=0,len=this.validators.length;i<len;i++){var message=this.validators[i].validate(value,rowData)
 if(message!==undefined)return message}}
 $.wn.table.processor.base=Base}(window.jQuery);+function($){"use strict";if($.wn.table===undefined)throw new Error("The $.wn.table namespace is not defined. Make sure that the table.js script is loaded.");if($.wn.table.processor===undefined)throw new Error("The $.wn.table.processor namespace is not defined. Make sure that the table.processor.base.js script is loaded.");var Base=$.wn.table.processor.base,BaseProto=Base.prototype
-var StringProcessor=function(tableObj,columnName,columnConfiguration){this.focusTimeoutHandler=this.onFocusTimeout.bind(this)
-Base.call(this,tableObj,columnName,columnConfiguration)}
+var StringProcessor=function(tableObj,columnName,columnConfiguration){Base.call(this,tableObj,columnName,columnConfiguration)}
 StringProcessor.prototype=Object.create(BaseProto)
 StringProcessor.prototype.constructor=StringProcessor
-StringProcessor.prototype.dispose=function(){BaseProto.dispose.call(this)
-this.focusTimeoutHandler=null}
+StringProcessor.prototype.dispose=function(){BaseProto.dispose.call(this)}
 StringProcessor.prototype.renderCell=function(value,cellContentContainer){this.createViewContainer(cellContentContainer,value);if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){cellContentContainer.classList.add('readonly');cellContentContainer.setAttribute('tabindex',0);}}
 StringProcessor.prototype.onFocus=function(cellElement,isClick){if(this.activeCell===cellElement)return
 this.activeCell=cellElement
@@ -528,8 +526,7 @@ input.setAttribute('type','text')
 input.setAttribute('class','string-input')
 input.value=this.tableObj.getCellValue(cellElement)
 cellContentContainer.appendChild(input)
-this.setCaretPosition(input,0)
-window.setTimeout(this.focusTimeoutHandler,0)}
+input.focus();this.setCaretPosition(input,0);}
 StringProcessor.prototype.keyNavigationAllowed=function(ev,direction){if(direction!='left'&&direction!='right')return true
 if(!this.activeCell)return true
 var editor=this.activeCell.querySelector('.string-input')
@@ -540,11 +537,6 @@ if(direction=='right')return caretPosition==editor.value.length
 return true}
 StringProcessor.prototype.onRowValueChanged=function(columnName,cellElement){if(columnName!=this.columnName){return}var value=this.tableObj.getCellValue(cellElement)
 this.setViewContainerValue(cellElement,value)}
-StringProcessor.prototype.onFocusTimeout=function(){if(!this.activeCell)return
-var editor=this.activeCell.querySelector('.string-input')
-if(!editor)return
-editor.focus()
-this.setCaretPosition(editor,0)}
 StringProcessor.prototype.getCaretPosition=function(input){if(document.selection){var selection=document.selection.createRange()
 selection.moveStart('character',-input.value.length)
 return selection.text.length}if(input.selectionStart!==undefined)return input.selectionStart
@@ -700,7 +692,7 @@ AutocompleteProcessor.prototype.onUnfocus=function(){if(!this.activeCell)return
 this.removeAutocomplete()
 BaseProto.onUnfocus.call(this)}
 AutocompleteProcessor.prototype.renderCell=function(value,cellContentContainer){BaseProto.renderCell.call(this,value,cellContentContainer)}
-AutocompleteProcessor.prototype.buildEditor=function(cellElement,cellContentContainer,isClick){if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){return}BaseProto.buildEditor.call(this,cellElement,cellContentContainer,isClick)
+AutocompleteProcessor.prototype.buildEditor=function(cellElement,cellContentContainer,isClick){BaseProto.buildEditor.call(this,cellElement,cellContentContainer,isClick)
 var self=this
 this.fetchOptions(cellElement,function autocompleteFetchOptions(options){self.buildAutoComplete(options)
 self=null})}
@@ -721,7 +713,16 @@ AutocompleteProcessor.prototype.prepareItems=function(items){var result={}
 if($.isArray(items)){for(var i=0,len=items.length;i<len;i++){result[items[i]]=items[i]}}else{result=items}return result}
 AutocompleteProcessor.prototype.removeAutocomplete=function(){var input=this.getInput()
 $(input).autocomplete('destroy')}
-$.wn.table.processor.autocomplete=AutocompleteProcessor;}(window.jQuery);+function($){"use strict";if($.wn.table===undefined)throw new Error("The $.wn.table namespace is not defined. Make sure that the table.js script is loaded.");if($.wn.table.validator===undefined)$.wn.table.validator={}
+$.wn.table.processor.autocomplete=AutocompleteProcessor;}(window.jQuery);+function($){"use strict";if($.wn.table===undefined){throw new Error("The $.wn.table namespace is not defined. Make sure that the table.js script is loaded.");}if($.wn.table.processor===undefined){throw new Error("The $.wn.table.processor namespace is not defined. Make sure that the table.processor.base.js script is loaded.");}const Base=$.wn.table.processor.base;const BaseProto=Base.prototype;const InspectorProcessor=function(tableObj,columnName,columnConfiguration){$(document).on('hiding.oc.inspector',this.onInspectorHidden.bind(this));this.inspector=null;Base.call(this,tableObj,columnName,columnConfiguration);}
+InspectorProcessor.prototype=Object.create(BaseProto);InspectorProcessor.prototype.constructor=InspectorProcessor;InspectorProcessor.prototype.dispose=function(){BaseProto.dispose.call(this);$(document).off('hiding.oc.inspector',this.onInspectorHidden.bind(this));}
+InspectorProcessor.prototype.renderCell=function(value,cellContentContainer){this.createViewContainer(cellContentContainer,value);if(this.columnConfiguration.readonly||this.columnConfiguration.readOnly){cellContentContainer.classList.add('readonly');cellContentContainer.setAttribute('tabindex',0);}}
+InspectorProcessor.prototype.onFocus=function(cellElement,isClick){if(this.activeCell===cellElement)return
+this.activeCell=cellElement
+if(!this.columnConfiguration.readonly&&!this.columnConfiguration.readOnly&&isClick){this.buildEditor(cellElement,this.getCellContentContainer(cellElement))}else{this.getCellContentContainer(cellElement).focus()}}
+InspectorProcessor.prototype.onUnfocus=function(){if(!this.activeCell){return;}this.showViewContainer(this.activeCell);this.activeCell=null;}
+InspectorProcessor.prototype.buildEditor=function(cellElement,cellContentContainer){this.hideViewContainer(this.activeCell);this.inspector=document.createElement('div');this.inspector.setAttribute('class','inspector-input');this.inspector.setAttribute('data-inspectable','true');this.inspector.setAttribute('data-inspector-title',this.columnConfiguration.inspectorTitle??this.columnConfiguration.title);this.inspector.setAttribute('data-inspector-offset-y','0');if(this.columnConfiguration.description){this.inspector.setAttribute('data-inspector-description',this.columnConfiguration.description);}this.inspector.setAttribute('data-inspector-config',this.getInspectorConfiguration());cellContentContainer.appendChild(this.inspector);window.setTimeout(()=>{this.inspector.click();},50);}
+InspectorProcessor.prototype.getInspectorConfiguration=function(){if(Array.isArray(this.columnConfiguration.properties)){return JSON.stringify(this.columnConfiguration.properties);}else if(typeof this.columnConfiguration.properties!=='object'){throw new Error('The properties configuration must be an object or an array.');}const config=[];Object.entries(this.columnConfiguration.properties).forEach(([key,value])=>{const settings=value;settings.property=key;config.push(settings);});return JSON.stringify(config);}
+InspectorProcessor.prototype.onInspectorHidden=function(ev,data){console.log(ev);console.log(data);if(!this.inspector||ev.target!==this.inspector){return;}this.tableObj.setCellValue(this.activeCell,data.values);};$.wn.table.processor.inspector=InspectorProcessor;}(window.jQuery);+function($){"use strict";if($.wn.table===undefined)throw new Error("The $.wn.table namespace is not defined. Make sure that the table.js script is loaded.");if($.wn.table.validator===undefined)$.wn.table.validator={}
 var Base=function(options){this.options=options}
 Base.prototype.validate=function(value,rowData){if(this.options.requiredWith!==undefined&&!this.rowHasValue(this.options.requiredWith,rowData))return
 return this.validateValue(value,rowData)}
