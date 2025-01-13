@@ -253,10 +253,7 @@ class Form extends WidgetBase
             $field = $this->allFields[$field];
         }
 
-        if (!isset($options['useContainer'])) {
-            $options['useContainer'] = true;
-        }
-        $targetPartial = $options['useContainer'] ? 'field-container' : 'field';
+        $targetPartial = ($options['useContainer'] ?? true) ? 'field-container' : 'field';
 
         return $this->makePartial($targetPartial, ['field' => $field]);
     }
