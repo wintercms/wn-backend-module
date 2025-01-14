@@ -92,10 +92,6 @@
     Client.prototype.searchRecords = function(query, offset, count, onSuccess) {
         const searchFields = this.tableObj.search.getSearchableColumns();
 
-        console.log(this.data);
-        console.log(query);
-        console.log(searchFields);
-
         const matched = this.data.filter(function(record) {
             for (let i = 0; i < searchFields.length; i++) {
                 const value = record[searchFields[i]];
