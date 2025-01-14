@@ -302,7 +302,7 @@ this.pageIndex=0
 this.pageCount=0
 this.init()};Navigation.prototype.init=function(){}
 Navigation.prototype.dispose=function(){this.tableObj=null}
-Navigation.prototype.paginationEnabled=function(){return this.tableObj.options.recordsPerPage!=null&&this.tableObj.options.recordsPerPage!=false}
+Navigation.prototype.paginationEnabled=function(){return this.tableObj.options.recordsPerPage>0;}
 Navigation.prototype.getPageFirstRowOffset=function(){return this.pageIndex*this.tableObj.options.recordsPerPage}
 Navigation.prototype.buildPagination=function(recordCount){if(!this.paginationEnabled())return
 var paginationContainer=this.tableObj.getElement().querySelector('.pagination'),newPaginationContainer=false,curRecordCount=0
