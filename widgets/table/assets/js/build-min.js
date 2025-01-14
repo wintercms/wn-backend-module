@@ -411,6 +411,7 @@ this.searchInput=$('.table-search-input',this.searchForm).get(0)}}
 Search.prototype.getQuery=function(){return $.trim(this.activeQuery)}
 Search.prototype.hasQuery=function(){return this.searchEnabled()&&$.trim(this.activeQuery).length>0}
 Search.prototype.searchEnabled=function(){return this.tableObj.options.searching}
+Search.prototype.getSearchableColumns=function(){const columns=[];this.tableObj.options.columns.forEach(function(column){if(column.type==='checkbox'){return;}if(!column.searchable){return;}columns.push(column.key);});return columns;}
 Search.prototype.performSearch=function(query,onSuccess){var isDirty=this.activeQuery!=query
 this.activeQuery=query
 if(isDirty){this.tableObj.updateDataTable(onSuccess)}}
@@ -439,6 +440,7 @@ Client.prototype.getRecords=function(offset,count,onSuccess){if(!count){onSucces
 Client.prototype.createRecord=function(recordData,placement,relativeToKey,offset,count,onSuccess){if(placement==='bottom'){this.data.push(recordData)}else if(placement=='above'||placement=='below'){var recordIndex=this.getIndexOfKey(relativeToKey)
 if(placement=='below')recordIndex++
 this.data.splice(recordIndex,0,recordData)}this.getRecords(offset,count,onSuccess)}
+Client.prototype.searchRecords=function(query,offset,count,onSuccess){const searchFields=this.tableObj.search.getSearchableColumns();console.log(this.data);console.log(query);console.log(searchFields);const matched=this.data.filter(function(record){for(let i=0;i<searchFields.length;i++){const value=record[searchFields[i]];if(value===undefined){continue;}if(value.toString().toLowerCase().includes(query.toLowerCase())){return true;}}return false;});if(matched.length===0){onSuccess([]);return;}if(!count){onSuccess(matched,matched.length);}else{onSuccess(matched.slice(offset,offset+count),matched.length);}}
 Client.prototype.updateRecord=function(key,recordData){var recordIndex=this.getIndexOfKey(key)
 if(recordIndex!==-1){recordData[this.tableObj.options.keyColumn]=key
 this.data[recordIndex]=recordData}else{throw new Error('Record with they key '+key+' is not found in the data set')}}
