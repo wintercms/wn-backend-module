@@ -154,6 +154,8 @@ return [
         'superuser_comment' => 'Grants this account unlimited access to all areas of the system. Super users can add and manage other users. ',
         'send_invite' => 'Send invitation by email',
         'send_invite_comment' => 'Sends a welcome message containing login and password information.',
+        'auto_generate_password' => 'Auto-generate password',
+        'auto_generate_password_comment' => 'Automatically create a secure random password. Uncheck to set a password manually.',
         'delete_confirm' => 'Delete this administrator?',
         'return' => 'Return to admin list',
         'allow' => 'Allow',

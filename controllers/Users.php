@@ -13,6 +13,7 @@ use Backend\Models\UserGroup;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 use System\Classes\SettingsManager;
 use Winter\Storm\Support\Facades\Flash;
 use Winter\Storm\Support\Facades\Mail;
@@ -103,6 +104,18 @@ class Users extends Controller
 
         // Ensure soft-deleted records can still be managed
         $query->withTrashed();
+    }
+
+    /**
+     * Before creating a new user, generate password if auto-generate is enabled
+     */
+    public function formBeforeCreate($model)
+    {
+        if (post('User._auto_generate_password')) {
+            $password = Str::random(22);
+            $model->password = $password;
+            $model->password_confirmation = $password;
+        }
     }
 
     /**

@@ -33,16 +33,34 @@ tabs:
             comment: backend::lang.user.send_invite_comment
             default: true
 
+        _auto_generate_password:
+            context: create
+            type: checkbox
+            label: backend::lang.user.auto_generate_password
+            comment: backend::lang.user.auto_generate_password_comment
+            default: true
+            trigger:
+                action: show
+                field: send_invite
+                condition: checked
 
         password:
             type: password
             span: left
             label: backend::lang.user.password
+            trigger:
+                action: disable
+                field: _auto_generate_password
+                condition: checked
 
         password_confirmation:
             type: password
             span: right
             label: backend::lang.user.password_confirmation
+            trigger:
+                action: disable
+                field: _auto_generate_password
+                condition: checked
 
         role:
             context: [create, update]
