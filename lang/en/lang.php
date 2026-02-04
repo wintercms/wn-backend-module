@@ -165,6 +165,13 @@ return [
         'updated_at' => 'Updated at',
         'deleted_at' => 'Deleted at',
         'show_deleted' => 'Show deleted',
+        'throttle_tab' => 'Failed Logins',
+        'throttle_tab_label' => 'Failed Login Records',
+        'throttle_comment' => 'View failed login attempts for this user. These records are automatically generated when login attempts fail. Users are suspended after exceeding the attempt limit.',
+        'throttle_ip_address' => 'IP Address',
+        'throttle_attempts' => 'Attempts',
+        'throttle_last_attempt' => 'Last Attempt',
+        'throttle_suspended_at' => 'Suspended At',
         'group' => [
             'name' => 'Group',
             'name_field' => 'Name',

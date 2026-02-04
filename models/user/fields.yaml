@@ -3,6 +3,13 @@
 # ===================================
 
 fields:
+    login:
+        span: left
+        label: backend::lang.user.login
+    email:
+        span: right
+        type: email
+        label: backend::lang.user.email
     is_superuser:
         context: [create, update]
         tab: backend::lang.user.permissions
@@ -16,17 +23,9 @@ tabs:
         backend::lang.user.account: icon-user
         backend::lang.user.groups: icon-users
         backend::lang.user.permissions: icon-key
+        backend::lang.user.throttle_tab: icon-ban
 
     fields:
-        login:
-            span: left
-            label: backend::lang.user.login
-
-        email:
-            span: right
-            type: email
-            label: backend::lang.user.email
-
         send_invite:
             context: create
             type: checkbox
@@ -64,6 +63,13 @@ tabs:
             commentAbove: backend::lang.user.groups_comment
             type: checkboxlist
             tab: backend::lang.user.groups
+
+        throttle:
+            label: backend::lang.user.throttle_tab_label
+            type: relationmanager
+            tab: backend::lang.user.throttle_tab
+            context: [update]
+            commentAbove: backend::lang.user.throttle_comment
 
 secondaryTabs:
     fields:
