@@ -3,6 +3,12 @@
 # ===================================
 
 fields:
+    first_name:
+        span: left
+        label: backend::lang.user.first_name
+    last_name:
+        span: right
+        label: backend::lang.user.last_name
     login:
         span: left
         label: backend::lang.user.login
@@ -10,12 +16,6 @@ fields:
         span: right
         type: email
         label: backend::lang.user.email
-    is_superuser:
-        context: [create, update]
-        tab: backend::lang.user.permissions
-        label: backend::lang.user.superuser
-        type: switch
-        comment: backend::lang.user.superuser_comment
 
 tabs:
     defaultTab: backend::lang.user.account
@@ -33,13 +33,6 @@ tabs:
             comment: backend::lang.user.send_invite_comment
             default: true
 
-        first_name:
-            span: left
-            label: backend::lang.user.first_name
-
-        last_name:
-            span: right
-            label: backend::lang.user.last_name
 
         password:
             type: password
@@ -91,3 +84,8 @@ secondaryTabs:
             mode: image
             imageHeight: 250
             imageWidth: 250
+        is_superuser:
+            context: [create, update]
+            label: backend::lang.user.superuser
+            type: switch
+            comment: backend::lang.user.superuser_comment
