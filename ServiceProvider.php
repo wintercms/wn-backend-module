@@ -303,7 +303,7 @@ class ServiceProvider extends ModuleServiceProvider
                     'description' => 'backend::lang.myaccount.menu_description',
                     'category'    => SettingsManager::CATEGORY_MYSETTINGS,
                     'icon'        => 'icon-user',
-                    'url'         => Backend::url('backend/users/myaccount'),
+                    'url'         => Backend::url('backend/myaccount'),
                     'order'       => 500,
                     'context'     => 'mysettings',
                     'keywords'    => 'backend::lang.myaccount.menu_keywords'
