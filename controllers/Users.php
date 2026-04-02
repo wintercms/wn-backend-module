@@ -154,7 +154,7 @@ class Users extends Controller
 
         Flash::success(Lang::get('backend::lang.account.impersonate_success'));
 
-        return Backend::redirect('backend/users/myaccount');
+        return Backend::redirect('backend/myaccount');
     }
 
     /**
